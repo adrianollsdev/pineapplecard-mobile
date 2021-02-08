@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Text,
     View,
@@ -7,12 +7,11 @@ import {
 
 import Carousel from 'react-native-snap-carousel';
 
-// import api from '../../services/api';
+import api from '../../services/api';
 import Logotipo from '../../assets/logotipo.svg';
 import styles from './styles';
 
 export default class App extends React.Component {
-
 
     constructor(props) {
         super(props);
@@ -55,7 +54,15 @@ export default class App extends React.Component {
     }
 
     render() {
-        return (
+        async function headerCard() {
+            const response = await api.get('/profile', {
+                parms: 1
+            });
+
+            return (response.data)
+        }
+        return (          
+            
             <View style={styles.container}>
                 <View style={styles.header}>
                     <Logotipo style={styles.logo} />
