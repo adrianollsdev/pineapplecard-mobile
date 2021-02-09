@@ -3,8 +3,12 @@ import {
     Text,
     View,
     SafeAreaView,
-    FlatList
+    FlatList,
 } from 'react-native';
+import {
+    ListItem,
+    Avatar
+} from 'react-native-elements'
 
 import Carousel from 'react-native-snap-carousel';
 
@@ -85,25 +89,16 @@ export default class App extends React.Component {
                     onEndReached={this.loadListInvoices(item.monthYearRef)}
                     onEndReachedThreshold={0.2}
                     renderItem={({ item : payment }) => (
-                        <View style={styles.payment}>
-                            console.log('payment.id', payment.id)
-                            {/* <Text style={[styles.incidentProperty, { marginTop: 0 }]}>ONG:</Text>
-                            <Text style={styles.incidentValue}>{payment.establishment}</Text>
 
-                            <Text style={styles.incidentProperty}>CASO:</Text>
-                            <Text style={styles.incidentValue}>{payment.title}</Text>
+                        <ListItem bottomDivider>
+                            <Avatar source={{ uri: payment.avatar_url }} />
+                            <ListItem.Content>
+                                <ListItem.Title>{payment.establishment.name}</ListItem.Title>
+                                <ListItem.Subtitle>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payment.amount)}</ListItem.Subtitle>
+                            </ListItem.Content>
+                            <ListItem.Chevron />
+                        </ListItem>
 
-                            <Text style={styles.incidentProperty}>VALOR:</Text>
-                            <Text style={styles.incidentValue}>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payment.value)}</Text>
-
-                            <TouchableOpacity
-                                style={styles.detailsButton}
-                                onPress={() => navigateToDetail(payment)}
-                            >
-                                <Text style={styles.detailsButtonText}>Ver mais detalhes</Text>
-                                <Feather name="arrow-right" size={16} color="#E01041" />
-                    </TouchableOpacity> */}
-                        </View>
                     )}
                 />
             </View>
