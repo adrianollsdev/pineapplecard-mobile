@@ -29,6 +29,7 @@ export default class App extends React.Component {
     }
     
     componentWillMount() {
+        
         this.loadHeadInvoices();
     }
 
@@ -42,8 +43,8 @@ export default class App extends React.Component {
                 loading: false
             })
             this.state.carouselItems.forEach(function (element, index) {
-                console.log('index', index)
-                console.log('element.invoiceType', element.invoiceType)
+                // console.log('index', index)
+                // console.log('element.invoiceType', element.invoiceType)
                 if (element.invoiceType == 'closed') {
                     return this.setState({indexHome:index});
                 } else if (element.invoiceType == 'open' && this.state.indexHome == 0) {
@@ -55,53 +56,56 @@ export default class App extends React.Component {
     }
 
     loadListInvoices(monthYearRef) {
-
+        console.log('monthYearRef', monthYearRef);
 
         api.get('/payment/1/' + monthYearRef).then(response => {
             this.setState({
-                payments: response.data.headers,
-                responseList: response.data
+                payments: response.data,
             })
-            console.log("responseList: ", this.state.responseList);
+            // console.log("responseList: ", this.state.payments);
         });
     }
 
 
     _renderItem({ item, index }) {
+        // const { payments } = this.state.payments;
+        console.log('payments: ', this.state.payments);
+        
         return (
             <View style={styles.card} >
                 <View style={ styles[item.invoiceType] }>
                     <Text  style={styles.titleCard}>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(item.totalInvoice)}</Text>
                     <Text style={styles.textCard}>Vencimento {item.dueDate}</Text>
                 </View>
-                {/* <FlatList
+                <FlatList
                     style={styles.paymentList}
                     data={this.state.payments}
-                    keyExtractor={payment => String(payment.id)}
+                    keyExtractor={(payment) => payment.id}
                     showsVerticalScrollIndicator={false}
-                    onEndReached={this.loadPayments()}
+                    onEndReached={this.loadListInvoices(item.monthYearRef)}
                     onEndReachedThreshold={0.2}
-                    renderItem={({ item: payment }) => (
-                        {<View style={styles.payment}>
-                            <Text style={[styles.incidentProperty, { marginTop: 0 }]}>ONG:</Text>
-                            <Text style={styles.incidentValue}>{incident.name}</Text>
+                    renderItem={({ item : payment }) => (
+                        <View style={styles.payment}>
+                            console.log('payment.id', payment.id)
+                            {/* <Text style={[styles.incidentProperty, { marginTop: 0 }]}>ONG:</Text>
+                            <Text style={styles.incidentValue}>{payment.establishment}</Text>
 
                             <Text style={styles.incidentProperty}>CASO:</Text>
-                            <Text style={styles.incidentValue}>{incident.title}</Text>
+                            <Text style={styles.incidentValue}>{payment.title}</Text>
 
                             <Text style={styles.incidentProperty}>VALOR:</Text>
-                            <Text style={styles.incidentValue}>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(incident.value)}</Text>
+                            <Text style={styles.incidentValue}>{Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(payment.value)}</Text>
 
                             <TouchableOpacity
                                 style={styles.detailsButton}
-                                onPress={() => navigateToDetail(incident)}
+                                onPress={() => navigateToDetail(payment)}
                             >
                                 <Text style={styles.detailsButtonText}>Ver mais detalhes</Text>
                                 <Feather name="arrow-right" size={16} color="#E01041" />
-                            </TouchableOpacity>
-                        </View>}
+                    </TouchableOpacity> */}
+                        </View>
                     )}
-                /> */}
+                />
             </View>
         )
     }
@@ -114,7 +118,7 @@ export default class App extends React.Component {
 
     render() {
 
-        
+        // const {payments} = this.state.payments;
         
         return (
 
@@ -130,7 +134,7 @@ export default class App extends React.Component {
                             data={this.state.carouselItems}
                             sliderWidth={380}
                             itemWidth={365}
-                            renderItem={this._renderItem}
+                            renderItem={this._renderItem.bind(this)}
                             activeSlideAlignment={'end'}
                             onSnapToItem={index => this.setState({ activeIndex: index })}
                             firstItem={3}
